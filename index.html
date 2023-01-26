@@ -246,7 +246,7 @@
 
       // view
 
-      let a = 0;
+      let updateViewLoaded = 0; //check if app html is loaded. promise/async/await?? les om det.
 
       function updateView() {
         document.getElementById("app").innerHTML = /* HTML */ `
@@ -258,11 +258,11 @@
         </div>
       </div>
         `;
-        a = 1;
+        updateViewLoaded = 1;
       }
 
       function statView() {
-        if (a == 1) {
+        if (updateViewLoaded == 1) {
           document.getElementById("statAreaID").innerHTML = /* HTML */ `
             <div class="statStats" id="stat1">
               <div>😀</div>
@@ -308,7 +308,7 @@
       }
 
       function clickerView() {
-        if (a == 1) {
+        if (updateViewLoaded == 1) {
           document.getElementById("clickerAreaID").innerHTML = /* HTML */ `
             <button class="clicker" id="click">😀</button>
             <div class="upgradeRotateContainer">
@@ -324,7 +324,7 @@
       }
 
       function buttonView() {
-        if (a == 1) {
+        if (updateViewLoaded == 1) {
           document.getElementById("buttonAreaID").innerHTML = /* HTML */ `
             <button class="upgradeButton" id="upgrade1" onclick="testFunc()">
               ${wordLOL}
@@ -347,7 +347,7 @@
       clickerView();
       buttonView();
 
-      //random internetthingy https://codepen.io/falldowngoboone/pen/PwzPYv
+      //TRAILING DOTS https://codepen.io/falldowngoboone/pen/PwzPYv
 
       // dots is an array of Dot objects,
       // mouse is an object used to track the X and Y position
@@ -429,6 +429,7 @@
       //Upgrade 2 - Balls flying inn from one direction (like a gun/canon or something)
       //Upgrade 3 - Katana slash? play with the trail anim to make it more like a slash. use blue color
       //vars from js to css?
+      //https://www.youtube.com/watch?v=yu0Cm4BqQv0
     </script>
   </body>
 </html>
