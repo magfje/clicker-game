@@ -144,6 +144,16 @@
         pointer-events: none;
       }
 
+      .Ability-ClickerTrail {
+        position: absolute;
+        height: 6px;
+        width: 6px;
+        border-radius: 3px;
+        background: #ffffff;
+        box-shadow: 0 0 10px #ffffff, 0 0 30px #ffffff;
+        pointer-events: none;
+      }
+
       @keyframes rotateUpgrade {
         to {
           transform: rotateZ(-1080deg);
@@ -244,6 +254,81 @@
         sound.play();
       }
 
+      //ABILITY CLICKER START
+
+      //TRAILING DOTS https://codepen.io/falldowngoboone/pen/PwzPYv
+      // ClickerTrails is an array of ClickerTrail objects,
+      // mouse is an object used to track the X and Y position
+      // of the mouse, set with a mousemove event listener below
+      let abilityClicker = 0;
+      let ClickerTrails = [],
+        mouse = {
+          x: 0,
+          y: 0,
+        };
+
+      let ClickerTrail = function () {
+        this.x = Math.floor(Math.random() * window.innerWidth); //Sets spawn position of trail to
+        this.y = Math.floor(Math.random() * window.innerHeight); // a random position inside the window
+        this.node = (function () {
+          let n = document.createElement("div");
+          n.className = "Ability-ClickerTrail";
+          document.body.appendChild(n);
+          return n;
+        })();
+      };
+      // The ClickerTrail.prototype.draw() method sets the position of
+      // the object's <div> node
+      // prototype allows you to add new properties to objects
+      ClickerTrail.prototype.draw = function () {
+        this.node.style.left = this.x + "px";
+        this.node.style.top = this.y + "px";
+      };
+      //appender bare nye divs hver gang. 55 trails på lvl 10.
+      function checkForNewTrails() {
+        for (let i = 0; i < abilityClicker; i++) {
+          const newClickerTrail = new ClickerTrail();
+          ClickerTrails.push(newClickerTrail);
+        }
+      }
+
+      // This is the screen redraw function
+      function draw() {
+        // Make sure the mouse position is set everytime
+        // draw() is called.
+        let x = mouse.x,
+          y = mouse.y;
+
+        // This loop is where all the 90s magic happens
+        ClickerTrails.forEach(function (ClickerTrail, index, ClickerTrails) {
+          let nextClickerTrail = ClickerTrails[index + 1] || ClickerTrails[0];
+
+          ClickerTrail.x = x;
+          ClickerTrail.y = y;
+          ClickerTrail.draw();
+          x += (nextClickerTrail.x - ClickerTrail.x) * 0.6;
+          y += (nextClickerTrail.y - ClickerTrail.y) * 0.6;
+        });
+      }
+      addEventListener("mousemove", function (event) {
+        //event.preventDefault();
+        mouse.x = event.pageX;
+        mouse.y = event.pageY;
+      });
+      function animate() {
+        draw();
+        requestAnimationFrame(animate);
+      }
+
+      // And get it started by calling animate().
+      //animate();
+
+      function upgradeAbilityClicker() {
+        abilityClicker++;
+        checkForNewTrails();
+      }
+      // Ability Clicker END.
+
       // view
 
       let updateViewLoaded = 0; //check if app html is loaded. promise/async/await?? les om det.
@@ -326,7 +411,11 @@
       function buttonView() {
         if (updateViewLoaded == 1) {
           document.getElementById("buttonAreaID").innerHTML = /* HTML */ `
-            <button class="upgradeButton" id="upgrade1" onclick="testFunc()">
+            <button
+              class="upgradeButton"
+              id="upgrade1"
+              onclick="upgradeAbilityClicker()"
+            >
               ${wordLOL}
             </button>
             <button class="upgradeButton" id="upgrade2" onclick="testFunc2()">
@@ -346,76 +435,9 @@
       statView();
       clickerView();
       buttonView();
+      animate();
 
       //TRAILING DOTS https://codepen.io/falldowngoboone/pen/PwzPYv
-
-      // dots is an array of Dot objects,
-      // mouse is an object used to track the X and Y position
-      // of the mouse, set with a mousemove event listener below
-      var dots = [],
-        mouse = {
-          x: 0,
-          y: 0,
-        };
-
-      // The Dot object used to scaffold the dots
-      var Dot = function () {
-        this.x = 0;
-        this.y = 0;
-        this.node = (function () {
-          var n = document.createElement("div");
-          n.className = "trail";
-          document.body.appendChild(n);
-          return n;
-        })();
-      };
-      // The Dot.prototype.draw() method sets the position of
-      // the object's <div> node
-      Dot.prototype.draw = function () {
-        this.node.style.left = this.x + "px";
-        this.node.style.top = this.y + "px";
-      };
-
-      // Creates the Dot objects, populates the dots array
-      for (var i = 0; i < 20; i++) {
-        var d = new Dot();
-        dots.push(d);
-      }
-
-      // This is the screen redraw function
-      function draw() {
-        // Make sure the mouse position is set everytime
-        // draw() is called.
-        var x = mouse.x,
-          y = mouse.y;
-
-        // This loop is where all the 90s magic happens
-        dots.forEach(function (dot, index, dots) {
-          var nextDot = dots[index + 1] || dots[0];
-
-          dot.x = x;
-          dot.y = y;
-          dot.draw();
-          x += (nextDot.x - dot.x) * 0.6;
-          y += (nextDot.y - dot.y) * 0.6;
-        });
-      }
-
-      addEventListener("mousemove", function (event) {
-        //event.preventDefault();
-        mouse.x = event.pageX;
-        mouse.y = event.pageY;
-      });
-
-      // animate() calls draw() then recursively calls itself
-      // everytime the screen repaints via requestAnimationFrame().
-      function animate() {
-        draw();
-        requestAnimationFrame(animate);
-      }
-
-      // And get it started by calling animate().
-      animate();
 
       //Read more on ARRAYS. See if upgrage levels can be put in an array to create a new div for each upgrade level
       //like its done for the trail effect. also apply the trail effect to each upgrade.
