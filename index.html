@@ -8,6 +8,7 @@
         padding: 0px;
         margin: 0px;
         box-sizing: border-box;
+        overflow: hidden;
       }
 
       .main {
@@ -50,7 +51,6 @@
         justify-content: center;
         height: 50rem;
         width: 50rem;
-
         background-color: rgb(31, 29, 34);
       }
 
@@ -61,7 +61,11 @@
         border-radius: 50%;
         font-size: 4rem;
         box-shadow: 0 0 10px #ffffff, 0 0 30px #ffffff;
-        background-color: rgb(31, 29, 34);
+        background-color: rgb(0, 0, 0);
+      }
+
+      .clicker:active {
+        box-shadow: 0 0 10px #c01212, 0 0 30px #df0808;
       }
 
       .upgradeRotateContainer {
@@ -72,6 +76,8 @@
         height: 10rem;
         position: fixed;
         animation: rotateUpgrade 6s linear infinite;
+        overflow: visible;
+        pointer-events: none;
       }
 
       .upgrade1Rotate {
@@ -144,7 +150,7 @@
         pointer-events: none;
       }
 
-      .Ability-ClickerTrail {
+      .Ability-clickerTrail {
         position: absolute;
         height: 6px;
         width: 6px;
@@ -152,6 +158,7 @@
         background: #ffffff;
         box-shadow: 0 0 10px #ffffff, 0 0 30px #ffffff;
         pointer-events: none;
+        transition: transform 350ms ease;
       }
 
       @keyframes rotateUpgrade {
@@ -217,7 +224,7 @@
         /* pointsPerClick = Number(pointsPerClick) + 20; */
         if (upgrade3 == 1) {
           setInterval(() => {
-            document.getElementById("image").click();
+            document.getElementById("click").click();
             updateView();
           }, 300);
         }
@@ -257,41 +264,43 @@
       //ABILITY CLICKER START
 
       //TRAILING DOTS https://codepen.io/falldowngoboone/pen/PwzPYv
-      // ClickerTrails is an array of ClickerTrail objects,
+      // clickerTrails is an array of clickerTrail objects,
       // mouse is an object used to track the X and Y position
       // of the mouse, set with a mousemove event listener below
       let abilityClicker = 0;
-      let ClickerTrails = [],
+      let clickerTrails = [],
         mouse = {
           x: 0,
           y: 0,
         };
 
-      let ClickerTrail = function () {
+      let clickerTrail = function () {
         this.x = Math.floor(Math.random() * window.innerWidth); //Sets spawn position of trail to
         this.y = Math.floor(Math.random() * window.innerHeight); // a random position inside the window
         this.node = (function () {
           let n = document.createElement("div");
-          n.className = "Ability-ClickerTrail";
+          n.className = "Ability-clickerTrail";
           document.body.appendChild(n);
           return n;
         })();
       };
-      // The ClickerTrail.prototype.draw() method sets the position of
+      // The clickerTrail.prototype.draw() method sets the position of
       // the object's <div> node
       // prototype allows you to add new properties to objects
-      ClickerTrail.prototype.draw = function () {
+      clickerTrail.prototype.draw = function () {
         this.node.style.left = this.x + "px";
         this.node.style.top = this.y + "px";
       };
-      //appender bare nye divs hver gang. 55 trails på lvl 10.
+      //appendes new divs each time its clicked, number of trails increases exponentially
       function checkForNewTrails() {
         for (let i = 0; i < abilityClicker; i++) {
-          const newClickerTrail = new ClickerTrail();
-          ClickerTrails.push(newClickerTrail);
+          const newclickerTrail = new clickerTrail();
+          clickerTrails.push(newclickerTrail);
         }
       }
 
+      let mouseIsClicked;
+      let radius = 200; //Should increase with upgrade, max value around 200
       // This is the screen redraw function
       function draw() {
         // Make sure the mouse position is set everytime
@@ -300,21 +309,46 @@
           y = mouse.y;
 
         // This loop is where all the 90s magic happens
-        ClickerTrails.forEach(function (ClickerTrail, index, ClickerTrails) {
-          let nextClickerTrail = ClickerTrails[index + 1] || ClickerTrails[0];
+        clickerTrails.forEach(function (clickerTrail, index, clickerTrails) {
+          let nextclickerTrail = clickerTrails[index + 1] || clickerTrails[0];
 
-          ClickerTrail.x = x;
-          ClickerTrail.y = y;
-          ClickerTrail.draw();
-          x += (nextClickerTrail.x - ClickerTrail.x) * 0.6;
-          y += (nextClickerTrail.y - ClickerTrail.y) * 0.6;
+          clickerTrail.x = x;
+          clickerTrail.y = y;
+          clickerTrail.draw();
+          x += (nextclickerTrail.x - clickerTrail.x) * 0.6;
+          y += (nextclickerTrail.y - clickerTrail.y) * 0.6;
+
+          //do something witht the trails onclick
+          if (mouseIsClicked) {
+            let distance = Math.sqrt(
+              Math.pow(mouse.x - clickerTrail.x, 2) +
+                Math.pow(mouse.y - clickerTrail.y, 2)
+            );
+            let angle = Math.random() * 2 * Math.PI;
+            clickerTrail.x = mouse.x + radius * Math.cos(angle) * 2;
+            clickerTrail.y = mouse.y + radius * Math.sin(angle) * 2;
+            clickerTrail.draw();
+            x += (nextclickerTrail.x - clickerTrail.x) * 0.6;
+            y += (nextclickerTrail.y - clickerTrail.y) * 0.6;
+          }
         });
       }
+
+      addEventListener("mousedown", function () {
+        //event.preventDefault();
+        mouseIsClicked = 1;
+      });
+      addEventListener("mouseup", function () {
+        //event.preventDefault();
+        mouseIsClicked = 0;
+      });
+
       addEventListener("mousemove", function (event) {
         //event.preventDefault();
         mouse.x = event.pageX;
         mouse.y = event.pageY;
       });
+
       function animate() {
         draw();
         requestAnimationFrame(animate);
@@ -329,7 +363,9 @@
       }
       // Ability Clicker END.
 
-      // view
+      //
+      // VIEW
+      //
 
       let updateViewLoaded = 0; //check if app html is loaded. promise/async/await?? les om det.
 
@@ -418,7 +454,7 @@
             >
               ${wordLOL}
             </button>
-            <button class="upgradeButton" id="upgrade2" onclick="testFunc2()">
+            <button class="upgradeButton" id="upgrade2" onclick="buyUpgrade3()">
               Upgrade2
             </button>
             <button class="upgradeButton" id="upgrade3" onclick="testFunc3()">
@@ -445,8 +481,8 @@
       //Make it a clicker game, dont bother with the mouse move idea now. do it later.
       //animate borderbox for main clicker on clicks, to make a "rippleeffect"
       //use satisfying pling and blips for sound
-      //main clicker upgrade should add more balls to the trail. (and more points per click)
-      //should animate to a random x/y position in a set radius on Click.
+      //main clicker upgrade should add more balls to the trail. (and more points per click) DONE
+      //should animate to a random x/y position in a set radius on Click. DONE ISH
       //Upgrade 1 should be the spinning thingy
       //Upgrade 2 - Balls flying inn from one direction (like a gun/canon or something)
       //Upgrade 3 - Katana slash? play with the trail anim to make it more like a slash. use blue color
