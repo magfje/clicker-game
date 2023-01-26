@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>cheat</title>
+    <style>
+      * {
+        padding: 0px;
+        margin: 0px;
+        box-sizing: border-box;
+      }
+
+      .main {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background-color: rgb(31, 29, 34);
+        height: 100vh;
+      }
+
+      .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .upgradeArea {
+        display: flex;
+        flex-direction: column;
+        width: 20rem;
+        background-color: rgb(143, 89, 18);
+      }
+
+      .upgradeStats {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        height: 5rem;
+        border: 1px solid black;
+      }
+
+      .statSpan {
+        display: flex;
+      }
+
+      .clickerArea {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 50rem;
+        width: 50rem;
+
+        background-color: rgb(31, 29, 34);
+      }
+
+      .clicker {
+        width: 10rem;
+        height: 10rem;
+        border: none;
+        border-radius: 50%;
+        font-size: 4rem;
+        box-shadow: 0 0 10px #ffffff, 0 0 30px #ffffff;
+        background-color: rgb(31, 29, 34);
+      }
+
+      .upgradeRotateContainer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 10rem;
+        height: 10rem;
+        position: fixed;
+        animation: rotateUpgrade 4s linear infinite;
+      }
+
+      .upgrade1Rotate {
+        position: fixed;
+        font-size: 1.7rem;
+        transform: translateX(10rem);
+        animation: rotateUpgrade 1s linear infinite;
+        background-color: #bf616a;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #bf616a, 0 0 30px #bf616a;
+        opacity: 0;
+      }
+
+      .upgrade2Rotate {
+        position: fixed;
+        font-size: 1.7rem;
+        transform: translateX(-10rem);
+        animation: rotateUpgrade 2s linear infinite;
+        background-color: #d08770;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #d08770, 0 0 30px #d08770;
+        opacity: 0;
+      }
+
+      .upgrade3Rotate {
+        position: fixed;
+        font-size: 1.7rem;
+        transform: translateY(10rem);
+        animation: rotateUpgrade 3s linear infinite;
+        background-color: #8fbcbb;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #8fbcbb, 0 0 30px #8fbcbb;
+        opacity: 0;
+      }
+      .upgrade4Rotate {
+        position: fixed;
+        font-size: 1.7rem;
+        transform: translateY(-10rem);
+        animation: rotateUpgrade 4s linear infinite;
+        background-color: #b48ead;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #b48ead, 0 0 30px #b48ead;
+        opacity: 0;
+      }
+
+      .buttonArea {
+        display: flex;
+        flex-direction: column;
+        height: 20rem;
+        width: 20rem;
+        background-color: rgb(143, 89, 18);
+      }
+
+      .upgradeButton {
+        height: 5rem;
+      }
+
+      @keyframes rotateUpgrade {
+        50% {
+          opacity: 1;
+        }
+
+        70% {
+          opacity: 1;
+        }
+        to {
+          transform: rotateZ(360deg);
+          opacity: 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="main" id="app">
+      <h1>Clicker-Game</h1>
+      <div class="content">
+        <div class="upgradeArea">
+          <div class="upgradeStats" id="stat1">
+            <div>😀</div>
+            <h3>Upgrade1</h3>
+            <div>
+              <span class="statSpan">stat1</span>
+              <span class="statSpan">stat1</span>
+              <span class="statSpan">stat1</span>
+            </div>
+          </div>
+          <div class="upgradeStats" id="stat1">
+            <div>😀</div>
+            <h3>Upgrade2</h3>
+            <div>
+              <span class="statSpan">stat1</span>
+              <span class="statSpan">stat1</span>
+              <span class="statSpan">stat1</span>
+            </div>
+          </div>
+          <div class="upgradeStats" id="stat1">
+            <div>😀</div>
+            <h3>Upgrade3</h3>
+            <div>
+              <span class="statSpan">stat1</span>
+              <span class="statSpan">stat1</span>
+              <span class="statSpan">stat1</span>
+            </div>
+          </div>
+          <div class="upgradeStats" id="stat1">
+            <div>😀</div>
+            <h3>Upgrade4</h3>
+            <div>
+              <span class="statSpan">stat1</span>
+              <span class="statSpan">stat1</span>
+              <span class="statSpan">stat1</span>
+            </div>
+          </div>
+        </div>
+        <div class="clickerArea">
+          <button class="clicker" id="click">😀</button>
+          <div class="upgradeRotateContainer">
+            <div class="upgrade1Rotate">😀</div>
+            <div class="upgrade2Rotate">😀</div>
+            <div class="upgrade3Rotate">😀</div>
+            <div class="upgrade4Rotate">😀</div>
+          </div>
+        </div>
+        <div class="buttonArea">
+          <button class="upgradeButton" id="upgrade1">Upgrade1</button>
+          <button class="upgradeButton" id="upgrade2">Upgrade2</button>
+          <button class="upgradeButton" id="upgrade3">Upgrade3</button>
+          <button class="upgradeButton" id="upgrade4">Upgrade4</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // model
+      var points = 0;
+      var pointsPerClick = 1;
+      var smileyIndex = 0;
+      let chkCheat = "";
+      let upgrade3 = 0;
+      const clickableImage = document.getElementById("image");
+      const sound = new Audio("win1.ogg");
+
+      // controller
+      function doClick() {
+        points += pointsPerClick;
+        smileyIndex = 1 - smileyIndex;
+        new Audio("win1.ogg").play();
+        updateView();
+      }
+
+      function buyUpgrade() {
+        if (points < 10) return;
+        points -= 10;
+        pointsPerClick++;
+        updateView();
+      }
+
+      function buyUpgrade2() {
+        if (points < 50) return;
+        points -= 50;
+        pointsPerClick = Number(pointsPerClick) * 2;
+        updateView();
+      }
+
+      function buyUpgrade3() {
+        if (points < 1) return;
+        points -= 1;
+        upgrade3 = 1;
+        /* pointsPerClick = Number(pointsPerClick) + 20; */
+        if (upgrade3 == 1) {
+          setInterval(() => {
+            document.getElementById("image").click();
+            updateView();
+          }, 300);
+        }
+      }
+
+      function cheatMode() {
+        chkCheat = "filthy cheater";
+        points = points * 10;
+        pointsPerClick = pointsPerClick * 10;
+        updateView();
+      }
+
+      function playSound() {
+        sound.play();
+      }
+
+      // view
+      //updateView();
+      function updateView() {
+        var smiley = smileyIndex == 0 ? "😀" : "😁";
+        document.getElementById("app").innerHTML = `
+                <div id="image" onclick="doClick()">${smiley}</div>
+                <div id="pointsInfo">${points}</div>
+                <button onclick="buyUpgrade()">Kjøp oppgradering (10 poeng)</button>
+                <button onclick="buyUpgrade2()">Kjøp oppgradering (50 poeng)</button>
+                <button onclick="cheatMode()">cheater</button>
+                <br/>
+                <button onclick="buyUpgrade3()">upgrade3</button>
+                <span>${chkCheat}</span>
+            `;
+      }
+    </script>
+  </body>
+</html>
